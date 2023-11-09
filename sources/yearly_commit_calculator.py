@@ -63,6 +63,8 @@ async def update_data_with_commit_stats(repo_details: Dict, yearly_data: Dict, d
     for branch in branch_data["data"]["repository"]["refs"]["nodes"]:
         commit_data = await DM.get_remote_graphql("repo_commit_list", owner=owner, name=repo_details["name"], branch=branch["name"], id=GHM.USER.node_id)
         for commit in commit_data["data"]["repository"]["ref"]["target"]["history"]["nodes"]:
+            if not commit:  # https://github.com/AyushAgnihotri2025/waka-readme-stats/commit/64de91ef77aa49567edc229ffe42670571025a27
+                continue
             date = search(r"\d+-\d+-\d+", commit["committedDate"]).group()
             curr_year = datetime.fromisoformat(date).year
             quarter = (datetime.fromisoformat(date).month - 1) // 3 + 1
